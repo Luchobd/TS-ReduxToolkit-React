@@ -1,7 +1,9 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+
 import authReducer from "./slices/auth";
+import settingsReducer from "./slices/settings";
 
 // LocalStorage -> Redux Persist
 const persistAuthConfig = {
@@ -10,12 +12,22 @@ const persistAuthConfig = {
   whiteList: ["accessToken"],
 };
 
+const persistSettingsConfig = {
+  key: "settings",
+  storage,
+  whiteList: ["themeMode"],
+};
+
 // Aplicando LocalStorage de forma mas simple con Redux.
 const store = configureStore({
   reducer: {
     auth: persistReducer<ReturnType<typeof authReducer>>(
       persistAuthConfig,
       authReducer
+    ),
+    settings: persistReducer<ReturnType<typeof settingsReducer>>(
+      persistSettingsConfig,
+      settingsReducer
     ),
   },
   middleware: (defaultMiddleware) =>
